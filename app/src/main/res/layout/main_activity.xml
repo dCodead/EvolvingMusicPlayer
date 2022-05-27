@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout android:orientation="vertical" android:id="@+id/coordinatorLayout" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="5">
+        <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+
+            <com.google.android.material.tabs.TabLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabMode="auto">
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/trackTab"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:text="Tracks                              صوتيات" />
+
+                <com.google.android.material.tabs.TabItem
+                    android:id="@+id/playlistTab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Playlists  قوائم تشغيل" />
+            </com.google.android.material.tabs.TabLayout>
+            <LinearLayout android:id="@+id/linearContent" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="90">
+                <ListView android:id="@+id/tracks" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="40"/>
+                <View android:id="@+id/divider2" android:background="?android:attr/listDivider" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="99.3"/>
+                <ListView android:id="@+id/playlists" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="60"/>
+            </LinearLayout>
+            <View android:id="@+id/divider" android:background="?android:attr/listDivider" android:layout_width="match_parent" android:layout_height="70dp" android:backgroundTint="#a9000000" android:backgroundTintMode="add" android:foregroundTint="#a9000000" android:foregroundTintMode="add"/>
+        </LinearLayout>
+        <FrameLayout android:orientation="vertical" android:id="@+id/playSheet" android:background="@drawable/ic_baseline_playingbackground" android:visibility="visible" android:layout_width="match_parent" android:layout_height="500dp" app:behavior_hideable="false" app:behavior_peekHeight="70dp" app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+            <LinearLayout android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
+                <ImageView android:layout_gravity="top|center_vertical|center_horizontal|center" android:id="@+id/upArrow" android:visibility="visible" android:layout_width="69dp" android:layout_height="20dp" android:src="@drawable/ic_baseline_keyboard_arrow_up_24" android:scaleType="centerCrop"/>
+                <LinearLayout android:orientation="horizontal" android:id="@+id/miniPlayLayout" android:layout_width="wrap_content" android:layout_height="wrap_content">
+                    <ImageView android:layout_gravity="start" android:id="@+id/albumArt" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" android:layout_weight="80" app:srcCompat="@drawable/pause_btn"/>
+                    <ProgressBar android:id="@+id/playingProgressBar" android:visibility="gone" android:layout_width="match_parent" android:layout_height="match_parent" android:progressDrawable="@android:drawable/ic_media_pause" android:progressTint="#df0000" android:secondaryProgressTint="#df0000" android:foregroundTint="#00ffffff" style="@style/Widget.AppCompat.ProgressBar"/>
+                    <TextView android:textAppearance="@style/TextAppearance.AppCompat.Display1" android:textColor="#ffffff" android:textColorLink="#a9000000" android:layout_gravity="start" android:id="@+id/currentTrack" android:visibility="visible" android:layout_width="match_parent" android:layout_height="match_parent" android:text="currentTrackName" android:textAlignment="gravity"/>
+                    <LinearLayout android:layout_gravity="end" android:orientation="horizontal" android:id="@+id/playControlsLayout" android:layout_width="match_parent" android:layout_height="match_parent">
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/prevButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="30"
+                            android:backgroundTint="#00ffffff"
+                            android:clickable="true"
+                            android:foregroundTint="#ffffff"
+                            android:foregroundTintMode="multiply"
+                            android:tint="#fff9f9"
+                            android:tintMode="add"
+                            android:visibility="visible"
+                            app:backgroundTint="#00ffffff"
+                            app:backgroundTintMode="add"
+                            app:fabSize="normal"
+                            app:rippleColor="#e3caca"
+                            app:srcCompat="@android:drawable/ic_media_previous"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/playButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="30"
+                            android:backgroundTint="#00ffffff"
+                            android:backgroundTintMode="add"
+                            android:clickable="true"
+                            android:foregroundTint="#ffffff"
+                            android:foregroundTintMode="multiply"
+                            android:tint="#fff9f9"
+                            android:tintMode="add"
+                            android:visibility="visible"
+                            app:backgroundTint="#00ffffff"
+                            app:backgroundTintMode="add"
+                            app:fabSize="normal"
+                            app:rippleColor="#e3caca"
+                            app:srcCompat="@drawable/pause_btn"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
+                            android:id="@+id/nextButton"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="30"
+                            android:backgroundTint="#00ffffff"
+                            android:clickable="true"
+                            android:foregroundTint="#ffffff"
+                            android:foregroundTintMode="multiply"
+                            android:tint="#fff9f9"
+                            android:tintMode="add"
+                            android:visibility="visible"
+                            app:backgroundTint="#00ffffff"
+                            app:backgroundTintMode="add"
+                            app:fabSize="normal"
+                            app:rippleColor="#e3caca"
+                            app:srcCompat="@android:drawable/ic_media_next"
+                            tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+        </FrameLayout>
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+    <SearchView
+        android:id="@+id/searchBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="95"
+        android:focusable="auto" />
+</LinearLayout>
