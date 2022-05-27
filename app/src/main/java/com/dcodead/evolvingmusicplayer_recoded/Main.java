@@ -28,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.util.ArrayList;
 
 public class Main extends AppCompatActivity {
     public static void main(String[] args){
@@ -35,7 +36,7 @@ public class Main extends AppCompatActivity {
     }
 
 
-
+    getTracks getTracks = new getTracks();
     protected void onCreate(Bundle savedInstanceStates) {
         super.onCreate(savedInstanceStates);
         setContentView(R.layout.main_activity);
@@ -57,10 +58,8 @@ public class Main extends AppCompatActivity {
             startActivity(intent);
             // permissions gathering ends here
 
+            //(this.getTracks).getAllTracks(uri, getContentResolver());
 
-            Uri uri;
-            super.onCreate(savedInstanceStates);
-            setContentView((int) R.layout.main_activity);
             final MediaController mediaController = new MediaController(getApplicationContext());
             LinearLayout miniPlayLayout = (LinearLayout) findViewById(R.id.miniPlayLayout);
             ListView tracksView = (ListView) findViewById(R.id.tracks);
@@ -69,6 +68,8 @@ public class Main extends AppCompatActivity {
             FloatingActionButton prevButton = (FloatingActionButton) findViewById(R.id.prevButton);
             ImageView albumArt = (ImageView) findViewById(R.id.albumArt);
             final TextView currentTrackName = (TextView) findViewById(R.id.currentTrack);
+
+
             playButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     String playPauseResult = mediaController.pause_resume();
@@ -79,6 +80,8 @@ public class Main extends AppCompatActivity {
                     }
                 }
             });
+
+
             nextButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     mediaController.next();
@@ -87,7 +90,7 @@ public class Main extends AppCompatActivity {
                         try {
                             int position = mediaController.getPosition();
                             if (position != -1) {
-                                currentTrackName.setText(this.getTracks.trackNames.get(position));
+                                currentTrackName.setText(getTracks.trackNames.get(position));
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -103,7 +106,7 @@ public class Main extends AppCompatActivity {
                         try {
                             int position = mediaController.getPosition();
                             if (position != -1) {
-                                currentTrackName.setText(this.getTracks.trackNames.get(position));
+                                currentTrackName.setText(getTracks.trackNames.get(position));
                             }
                         } catch (Exception ex) {
                             ex.printStackTrace();
@@ -127,7 +130,6 @@ public class Main extends AppCompatActivity {
             });
             final BottomSheetBehavior bottomSheetBehavior = sheetBehavior;
             MediaController mediaController2 = mediaController;
-            C00045 r11 = r0;
             final LinearLayout linearLayout = miniPlayLayout;
             ImageView arrow2 = arrow;
             final LinearLayout linearLayout2 = (LinearLayout) findViewById(R.id.playControlsLayout);
@@ -141,7 +143,7 @@ public class Main extends AppCompatActivity {
             final FloatingActionButton floatingActionButton3 = nextButton;
             FloatingActionButton floatingActionButton4 = prevButton;
             final ImageView imageView = arrow2;
-            BottomSheetBehavior.BottomSheetCallback r0 = new BottomSheetBehavior.BottomSheetCallback() {
+            BottomSheetBehavior.BottomSheetCallback playsheet = new BottomSheetBehavior.BottomSheetCallback() {
                 public void onStateChanged(View bottomSheet, int newState) {
                     if (bottomSheetBehavior.getState() == 4) {
                         linearLayout.setOrientation(0);
@@ -163,23 +165,23 @@ public class Main extends AppCompatActivity {
                     imageView.setRotation(180.0f * slideOffset);
                 }
             };
-            sheetBehavior2.addBottomSheetCallback(r11);
+            sheetBehavior2.addBottomSheetCallback(playsheet);
 
 
             getTracks.getAllTracks(uri, getContentResolver());
-            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(this, getTracks.trackNames);
+            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(this.getApplicationContext(), R.id.tracks, getTracks.trackNames);
             tracksView.setAdapter(allTrackNamesAdapter);
             final MediaController mediaController3 = mediaController2;
             Uri uri2 = uri;
-            C00056 r6 = r0;
+            ArrayList<String> trackNames = getTracks.trackNames;
             final TextView textView2 = currentTrackName2;
             ArrayAdapter arrayAdapter = allTrackNamesAdapter;
             final ImageView imageView2 = albumArt;
             Intent intent2 = intent;
             final FloatingActionButton floatingActionButton5 = playButton;
-            C00056 r02 = new AdapterView.OnItemClickListener() {
+            AdapterView.OnItemClickListener onChooseListenedr = new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> adapterView, View v, int position, long id) {
-                    pos = position;
+                   // pos = position;
                     try {
                         mediaController3.playMulti(getTracks.trackUris, position);
                         textView2.setText(getTracks.trackNames.get(mediaController3.getPosition()));
@@ -194,7 +196,7 @@ public class Main extends AppCompatActivity {
                     }
                 }
             };
-            tracksView.setOnItemClickListener(r6);
+            tracksView.setOnItemClickListener(onChooseListenedr);
             mediaController2.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer player) {
                     playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play_rectangle));
@@ -203,9 +205,6 @@ public class Main extends AppCompatActivity {
         }
 
 
-
-        //Bottomsheet "playsheet"
-        //BottomSheetBehavior playsheet = new BottomSheetBehavior(R.id./*put frame layout here child of coordinator*/);
 
     }
 }
