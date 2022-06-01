@@ -121,10 +121,10 @@ public class Main extends AppCompatActivity {
             sheetBehavior.setDraggable(true);
             arrow.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    if (sheetBehavior.getState() == 4) {
-                        sheetBehavior.setState(3);
+                    if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
                     } else {
-                        sheetBehavior.setState(4);
+                        sheetBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
                     }
                 }
             });
@@ -145,14 +145,14 @@ public class Main extends AppCompatActivity {
             final ImageView imageView = arrow2;
             BottomSheetBehavior.BottomSheetCallback playsheet = new BottomSheetBehavior.BottomSheetCallback() {
                 public void onStateChanged(View bottomSheet, int newState) {
-                    if (bottomSheetBehavior.getState() == 4) {
-                        linearLayout.setOrientation(0);
+                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                         linearLayout2.setGravity(GravityCompat.START);
                         linearLayout.setGravity(17);
                         textView.setGravity(GravityCompat.START);
                         return;
                     }
-                    linearLayout.setOrientation(1);
+                    linearLayout.setOrientation(LinearLayout.VERTICAL);
                     linearLayout.setGravity(80);
                     textView.setGravity(17);
                     linearLayout2.setGravity(17);
