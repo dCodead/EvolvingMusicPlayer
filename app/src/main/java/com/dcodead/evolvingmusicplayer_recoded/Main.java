@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.text.Layout;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -47,29 +48,30 @@ public class Main extends AppCompatActivity {
             } else {
                 uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
             }
+
             // Permission gathering
-            new File("Android/media");
-            Uri filesUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Android/media/");
-            Uri buildTreeDocumentUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/media/");
-            if (filesUri.getAuthority() != null && filesUri.getAuthority() == "com.android.externalstorage.documents") {
-                new File(Environment.getExternalStorageDirectory(), filesUri.getPath().split(":", 2)[1]);
-            }
-            Intent intent = new Intent("android.intent.action.OPEN_DOCUMENT_TREE");
-            startActivity(intent);
+//            new File("Android/media");
+//            Uri filesUri = DocumentsContract.buildDocumentUri("com.android.externalstorage.documents", "primary:Android/media/");
+//            Uri buildTreeDocumentUri = DocumentsContract.buildTreeDocumentUri("com.android.externalstorage.documents", "primary:Android/media/");
+//            if (filesUri.getAuthority() != null && filesUri.getAuthority() == "com.android.externalstorage.documents") {
+//                new File(Environment.getExternalStorageDirectory(), filesUri.getPath().split(":", 2)[1]);
+//            }
+//            Intent intent = new Intent("android.intent.action.OPEN_DOCUMENT_TREE");
+//            startActivity(intent);
             // permissions gathering ends here
 
             //(this.getTracks).getAllTracks(uri, getContentResolver());
-
-            final MediaController mediaController = new MediaController(getApplicationContext());
+//
+            MediaController mediaController = new MediaController(getApplicationContext());
             LinearLayout miniPlayLayout = (LinearLayout) findViewById(R.id.miniPlayLayout);
             ListView tracksView = (ListView) findViewById(R.id.tracks);
-            final FloatingActionButton playButton = (FloatingActionButton) findViewById(R.id.playButton);
+            FloatingActionButton playButton = (FloatingActionButton) findViewById(R.id.playButton);
             FloatingActionButton nextButton = (FloatingActionButton) findViewById(R.id.nextButton);
             FloatingActionButton prevButton = (FloatingActionButton) findViewById(R.id.prevButton);
             ImageView albumArt = (ImageView) findViewById(R.id.albumArt);
-            final TextView currentTrackName = (TextView) findViewById(R.id.currentTrack);
-
-
+            TextView currentTrackName = (TextView) findViewById(R.id.currentTrack);
+//
+//
             playButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     String playPauseResult = mediaController.pause_resume();
@@ -80,8 +82,8 @@ public class Main extends AppCompatActivity {
                     }
                 }
             });
-
-
+//
+//
             nextButton.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
                     mediaController.next();
@@ -114,9 +116,12 @@ public class Main extends AppCompatActivity {
                     }
                 }
             });
+
             FrameLayout playSheet = (FrameLayout) findViewById(R.id.playSheet);
-            final BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(playSheet);
+
             playSheet.setClickable(true);
+            BottomSheetBehavior sheetBehavior = BottomSheetBehavior.from(playSheet);
+
             ImageView arrow = (ImageView) findViewById(R.id.upArrow);
             sheetBehavior.setDraggable(true);
             arrow.setOnClickListener(new View.OnClickListener() {
@@ -128,76 +133,63 @@ public class Main extends AppCompatActivity {
                     }
                 }
             });
-            final BottomSheetBehavior bottomSheetBehavior = sheetBehavior;
-            MediaController mediaController2 = mediaController;
-            final LinearLayout linearLayout = miniPlayLayout;
-            ImageView arrow2 = arrow;
-            final LinearLayout linearLayout2 = (LinearLayout) findViewById(R.id.playControlsLayout);
-            final TextView textView = currentTrackName;
-            LinearLayout linearLayout3 = miniPlayLayout;
-            BottomSheetBehavior sheetBehavior2 = sheetBehavior;
-            final FloatingActionButton floatingActionButton = playButton;
-            FrameLayout frameLayout = playSheet;
-            final FloatingActionButton floatingActionButton2 = prevButton;
-            TextView currentTrackName2 = currentTrackName;
-            final FloatingActionButton floatingActionButton3 = nextButton;
-            FloatingActionButton floatingActionButton4 = prevButton;
-            final ImageView imageView = arrow2;
-            BottomSheetBehavior.BottomSheetCallback playsheet = new BottomSheetBehavior.BottomSheetCallback() {
+            LinearLayout playControls = (LinearLayout) findViewById(R.id.playControlsLayout);
+//            TextView textView = currentTrackName;
+//            BottomSheetBehavior sheetBehavior2 = sheetBehavior;
+//            TextView currentTrackName2 = currentTrackName;
+            //needs cleaning doesn't wwork
+            BottomSheetBehavior playsheet = new BottomSheetBehavior() {
                 public void onStateChanged(View bottomSheet, int newState) {
-                    if (bottomSheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
-                        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                        linearLayout2.setGravity(GravityCompat.START);
-                        linearLayout.setGravity(17);
-                        textView.setGravity(GravityCompat.START);
+                    if (sheetBehavior.getState() == BottomSheetBehavior.STATE_COLLAPSED) {
+                        miniPlayLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        playControls.setGravity(GravityCompat.START);
+                        playControls.setGravity(17);
+                        currentTrackName.setGravity(GravityCompat.START);
                         return;
                     }
-                    linearLayout.setOrientation(LinearLayout.VERTICAL);
-                    linearLayout.setGravity(80);
-                    textView.setGravity(17);
-                    linearLayout2.setGravity(17);
+                    miniPlayLayout.setOrientation(LinearLayout.VERTICAL);
+                    miniPlayLayout.setGravity(80);
+                    currentTrackName.setGravity(17);
+                    playControls.setGravity(17);
                 }
 
+//
                 public void onSlide(View bottomSheet, float slideOffset) {
-                    floatingActionButton.setCustomSize((int) ((110.0f * slideOffset) + 100.0f));
-                    floatingActionButton2.setCustomSize((int) ((slideOffset * 90.0f) + 100.0f));
-                    floatingActionButton3.setCustomSize((int) ((90.0f * slideOffset) + 100.0f));
-                    imageView.setRotation(180.0f * slideOffset);
+                    playButton.setCustomSize((int) ((110.0f * slideOffset) + 100.0f));
+                    prevButton.setCustomSize((int) ((slideOffset * 90.0f) + 100.0f));
+                    nextButton.setCustomSize((int) ((90.0f * slideOffset) + 100.0f));
+                    arrow.setRotation(180.0f * slideOffset);
                 }
             };
-            sheetBehavior2.addBottomSheetCallback(playsheet);
-
-
-            getTracks.getAllTracks(uri, getContentResolver());
-            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(this.getApplicationContext(), R.id.tracks, getTracks.trackNames);
+//            sheetBehavior.addBottomSheetCallback(playsheet);
+//
+            //problem nextline.
+//            getTracks.getAllTracks(uri, getContentResolver());
+            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(getApplicationContext(), R.layout.main_activity,R.id.tracks/*tracks listview*/, getTracks.trackNames);
             tracksView.setAdapter(allTrackNamesAdapter);
-            final MediaController mediaController3 = mediaController2;
-            Uri uri2 = uri;
-            ArrayList<String> trackNames = getTracks.trackNames;
-            final TextView textView2 = currentTrackName2;
+
+//            ArrayList<String> trackNames = getTracks.trackNames;
             ArrayAdapter arrayAdapter = allTrackNamesAdapter;
-            final ImageView imageView2 = albumArt;
-            Intent intent2 = intent;
-            final FloatingActionButton floatingActionButton5 = playButton;
             AdapterView.OnItemClickListener onChooseListenedr = new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> adapterView, View v, int position, long id) {
                    // pos = position;
                     try {
-                        mediaController3.playMulti(getTracks.trackUris, position);
-                        textView2.setText(getTracks.trackNames.get(mediaController3.getPosition()));
+                        mediaController.playMulti(getTracks.trackUris, position);
+                        currentTrackName.setText(getTracks.trackNames.get(mediaController.getPosition()));
                         if (!getTracks.trackImagePaths.get(position).equals("-1")) {
-                            imageView2.setImageBitmap(BitmapFactory.decodeFile(getTracks.trackImagePaths.get(position)));
+                            albumArt.setImageBitmap(BitmapFactory.decodeFile(getTracks.trackImagePaths.get(position)));
                         } else {
-                            imageView2.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
+                            albumArt.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
                         }
-                        floatingActionButton5.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
+                        //becomes pause btn
+                        playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             };
             tracksView.setOnItemClickListener(onChooseListenedr);
-            mediaController2.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            mediaController.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 public void onCompletion(MediaPlayer player) {
                     playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play_rectangle));
                 }
