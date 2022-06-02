@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+
+
+    android:id="@+id/aa"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:textAlignment="center">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:text="Permission Dialog"
+        android:textColor="#A8A8A8"
+        android:textSize="24sp" />
+
+    <ListView
+        android:id="@+id/permission_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="85">
+
+    </ListView>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="15"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/allow_btn"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Only allow selected permissions" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

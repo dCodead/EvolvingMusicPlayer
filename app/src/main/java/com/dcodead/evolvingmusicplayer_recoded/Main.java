@@ -2,6 +2,8 @@ package com.dcodead.evolvingmusicplayer_recoded;
 
 
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.MediaPlayer;
@@ -21,26 +23,54 @@ import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
+import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
+import java.sql.Array;
 import java.util.ArrayList;
 
 public class Main extends AppCompatActivity {
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
     }
 
-
+    DialogFragment permissionDialog;
+    ListView permissionListView;
     getTracks getTracks = new getTracks();
+
     protected void onCreate(Bundle savedInstanceStates) {
         super.onCreate(savedInstanceStates);
         setContentView(R.layout.main_activity);
+//        setContentView(R.layout.permission_ui);
+//
+//        //Permission check and dialog area
+//        // if (no permission){
+//        permissionDialog = new DialogFragment(R.layout.permission_ui);
+////        permissionDialog.show();
+//        String[] permissionsArray = new String[]{"Read External Storage", "Write External Storage"};
+//        String[] permissionDescArray = new String[]{"Used to search for audio tracks.", "Used to store playlists"};
+//
+//        permissionListView = findViewById(R.id.permission_list);
+//
+//            ArrayAdapter adapt = new ArrayAdapter(getApplicationContext(), R.layout.permission_list_item
+//                    ,R.id.permission_name_item, permissionsArray);
+//        permissionListView.setAdapter(adapt);
+//
+//    }
+//}
+//        ArrayAdapter<String> permissionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.permission_ui, permissionListView, permissionsArray);
+//        permissionDialog = new DialogFragment(R.layout.permission_ui);
+//        permissionDialog.show();
+        // }
+        // permission check and dialog ends here
+
         {
             Uri uri;
             if (Build.VERSION.SDK_INT >= 29) { // sdk>29 needs special permissions
@@ -165,7 +195,8 @@ public class Main extends AppCompatActivity {
 //
             //problem nextline.
 //            getTracks.getAllTracks(uri, getContentResolver());
-            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(getApplicationContext(), R.layout.main_activity,R.id.tracks/*tracks listview*/, getTracks.trackNames);
+            ArrayAdapter allTrackNamesAdapter = new ArrayAdapter(getApplicationContext(),
+            R.layout.tracks_list_item, R.id.track_name_item, getTracks.trackNames);
             tracksView.setAdapter(allTrackNamesAdapter);
 
 //            ArrayList<String> trackNames = getTracks.trackNames;
@@ -181,22 +212,29 @@ public class Main extends AppCompatActivity {
                         } else {
                             albumArt.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
                         }
-                        //becomes pause btn
+                        //becones pausevb
                         playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_btn));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
             };
-            tracksView.setOnItemClickListener(onChooseListenedr);
-            mediaController.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                public void onCompletion(MediaPlayer player) {
-                    playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play_rectangle));
-                }
-            });
+//            tracksView.setOnItemClickListener(onChooseListenedr);
+//            mediaController2.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                public void onCompletion(MediaPlayer player) {
+//                    playButton.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.play_rectangle));
+//                }
+//            });
         }
 
 
 
+    }
+}
+
+class customPermissionAdapter extends ArrayAdapter{
+
+    public customPermissionAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull Object[] objects) {
+        super(context, resource, textViewResourceId, objects);
     }
 }
