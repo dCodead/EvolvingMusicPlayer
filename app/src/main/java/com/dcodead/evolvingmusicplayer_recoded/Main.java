@@ -14,7 +14,9 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.Layout;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
@@ -24,6 +26,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
@@ -31,6 +34,8 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.sql.Array;
@@ -47,25 +52,29 @@ public class Main extends AppCompatActivity {
 
     protected void onCreate(Bundle savedInstanceStates) {
         super.onCreate(savedInstanceStates);
-        setContentView(R.layout.main_activity);
-//        setContentView(R.layout.permission_ui);
-//
-//        //Permission check and dialog area
-//        // if (no permission){
-//        permissionDialog = new DialogFragment(R.layout.permission_ui);
-////        permissionDialog.show();
-//        String[] permissionsArray = new String[]{"Read External Storage", "Write External Storage"};
-//        String[] permissionDescArray = new String[]{"Used to search for audio tracks.", "Used to store playlists"};
-//
-//        permissionListView = findViewById(R.id.permission_list);
-//
-//            ArrayAdapter adapt = new ArrayAdapter(getApplicationContext(), R.layout.permission_list_item
-//                    ,R.id.permission_name_item, permissionsArray);
-//        permissionListView.setAdapter(adapt);
-//
-//    }
-//}
-//        ArrayAdapter<String> permissionAdapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.permission_ui, permissionListView, permissionsArray);
+//        setContentView(R.layout.main_activity);
+        setContentView(R.layout.permission_ui);
+
+        //Permission check and dialog area
+        // if (no permission){
+        permissionDialog = new DialogFragment(R.layout.permission_ui);
+//        permissionDialog.show();
+
+        Permission readExtStorage = new Permission("Read External Storage",
+                "Used to search for audio tracks.", null);
+
+        Permission writeExtStorage = new Permission("Write External Storage",
+                "Used to store playlists.", null);
+        Permission[] permissions= new Permission[]{readExtStorage, writeExtStorage};
+
+        permissionListView = findViewById(R.id.permission_list);
+
+        //// Custom Permission adapter starts here
+        PermissionAdapter adapt = new PermissionAdapter(getApplicationContext(), R.layout.permission_list_item,
+                0, R.id.permission_name_item, R.id.permission_description_item, permissions);
+        permissionListView.setAdapter(adapt);
+
+
 //        permissionDialog = new DialogFragment(R.layout.permission_ui);
 //        permissionDialog.show();
         // }
@@ -227,14 +236,55 @@ public class Main extends AppCompatActivity {
 //            });
         }
 
-
-
-    }
+        }
 }
 
-class customPermissionAdapter extends ArrayAdapter{
 
-    public customPermissionAdapter(@NonNull Context context, int resource, int textViewResourceId, @NonNull Object[] objects) {
-        super(context, resource, textViewResourceId, objects);
+
+class PermissionAdapter extends ArrayAdapter<Object> {
+    private Context context;
+    private Permission[] permissions;
+    private int resource; // Resource of list item layout
+    private int mainTextResourceId;
+    private int descriptionTextResourceId;
+    private int imageViewResourceId;
+    public PermissionAdapter(@NonNull Context context, int resource, int imageViewResourceId, int mainTextViewResourceId,
+                         int descriptionTextViewResourceId, @NonNull Permission[] permissions) {
+        super(context, resource, permissions);
+        this.context = context;
+        this.permissions = permissions;
+        this.resource = resource;
+        mainTextResourceId = mainTextViewResourceId;
+        descriptionTextResourceId = descriptionTextViewResourceId;
+        this.imageViewResourceId = imageViewResourceId;
+
+    }
+
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        View listItem = convertView;
+        if(listItem == null){
+            listItem = LayoutInflater.from(context).inflate(R.layout.permission_list_item, parent, false);
+            listItem = LayoutInflater.from(context).inflate(resource, parent, false);
+        }
+
+        Permission permission = permissions[position];
+
+        // ImageView
+        if(imageViewResourceId!=0) {
+            ImageView itemImage = (ImageView) listItem.findViewById(imageViewResourceId);
+            itemImage.setImageDrawable(permission.getImage()); // Mostly will be wrong
+        }
+        // Main TextView
+        if(mainTextResourceId!=0) {
+            TextView itemName = (TextView) listItem.findViewById(mainTextResourceId);
+            itemName.setText(permission.getName());
+        }
+        // Description TextView
+        if(descriptionTextResourceId!=0) {
+            TextView itemDescription = (TextView) listItem.findViewById(descriptionTextResourceId);
+            itemDescription.setText(permission.getDescription());
+        }
+
+        return listItem;
     }
 }

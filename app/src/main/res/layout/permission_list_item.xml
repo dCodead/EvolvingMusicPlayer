@@ -41,7 +41,7 @@
             android:background="?android:attr/listDivider" />
 
         <TextView
-            android:id="@+id/permission_description_tem"
+            android:id="@+id/permission_description_item"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_weight="85"
