@@ -14,6 +14,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.view.GravityCompat;
 import androidx.fragment.app.DialogFragment;
@@ -39,6 +41,8 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 
 public class Main extends AppCompatActivity {
     public static void main(String[] args) {
@@ -48,31 +52,41 @@ public class Main extends AppCompatActivity {
     DialogFragment permissionDialog;
     ListView permissionListView;
     getTracks getTracks = new getTracks();
-    private Boolean checkWriteExternalStoragePermission(){
-        String writePerrmission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        String readPermission = Manifest.permission.READ_EXTERNAL_STORAGE;
-        int code = getApplicationContext().checkCallingOrSelfPermission(readPermission);
-        return (code==PackageManager.PERMISSION_GRANTED);
-    }
+//    private Boolean checkPermission(String permmission){
+//        int code = getApplicationContext().checkCallingOrSelfPermission(permmission);
+//        return (code==PackageManager.PERMISSION_GRANTED);
+//    }
+
 
     protected void onCreate(Bundle savedInstanceStates) {
         super.onCreate(savedInstanceStates);
-        setContentView(R.layout.main_activity);
-
+//        setContentView(R.layout.main_activity);
 
 
         //Permission check and dialog area
         // if (no permission){
+        requestPermission();
+
+
 
         //Temp
-        Boolean permission = (checkWriteExternalStoragePermission())? true : false;
-        if(!permission) {
-            ////end Temp
-            setContentView(R.layout.permission_ui); // to be deleted later
-            permissionDialog = new DialogFragment(R.layout.permission_ui);
-//        permissionDialog.show();
+//        String readPermission = Manifest.permission.READ_EXTERNAL_STORAGE;
+//        String writePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+//        int readCode;
+//        int writeCode;
 
-
+//        Boolean readPermitted = (checkPermission(readPermission))? true : false;
+//        Boolean writePermitted = (checkPermission(writePermission))? true : false;
+//
+//        while(!readPermitted && !writePermitted){
+//            ////end Temp
+//            ActivityCompat.requestPermissions(this, new String[]{readPermission}, 0);
+//            ActivityCompat.requestPermissions(this, new String[]{writePermission}, 1);
+//            readPermitted = (checkPermission(readPermission))? true : false;
+//            writePermitted = (checkPermission(writePermission))? true : false;
+//            setContentView(R.layout.permission_ui); // to be deleted later
+//            permissionDialog = new DialogFragment(R.layout.permission_ui);
+//            permissionDialog.show(getFragmentManager(), "dialog");
 
 
 //
@@ -93,8 +107,8 @@ public class Main extends AppCompatActivity {
 
 //        permissionDialog = new DialogFragment(R.layout.permission_ui);
 //        permissionDialog.show();
-            // }
-        }else {
+        // }
+
             // permission check and dialog ends here
             setContentView(R.layout.main_activity);
 
@@ -237,11 +251,12 @@ public class Main extends AppCompatActivity {
                                 // NEEDS CLEANING
                                 albumArt.setImageURI(null);
 
-                                albumArt.setImageURI(getTracks.tracks.get(position).getAlbummArtUri());
-
-                                File f = new File(getTracks.tracks.get(position).getAlbummArtUri().getPath()) ;
-                                albumArt.setImageBitmap(BitmapFactory.decodeFile(f.getAbsolutePath()));
-
+//                                albumArt.setImageURI(getTracks.tracks.get(position).getAlbummArtUri());
+//
+//                                File f = new File(getTracks.tracks.get(position).getAlbummArtUri().getPath()) ;
+//                                albumArt.setImageBitmap(BitmapFactory.decodeFile(f.getAbsolutePath()));
+//                                albumArt.setMaxHeight(60);
+//                                albumArt.setMaxWidth(60);
                                 albumArt.setImageURI(getTracks.tracks.get(position).getAlbummArtUri());
 
 
@@ -255,10 +270,10 @@ public class Main extends AppCompatActivity {
 //                            e.printStackTrace();
                             albumArt.setImageDrawable(ContextCompat.getDrawable(getApplicationContext(), R.drawable.pause_bar));
 
-//                            currentTrackName.setText(getTracks.tracks.get(position).getAlbummArtPath());
                         }
                     }
                 };
+
                 tracksView.setOnItemClickListener(onChooseListener);
                 mediaController.getMediaPlayer().setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                     public void onCompletion(MediaPlayer player) {
@@ -268,7 +283,52 @@ public class Main extends AppCompatActivity {
             }
 
         }
+
+
+
+    private Boolean readPermitted(){
+        return (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED);
+    }
+    private Boolean writePermitted(){
+        return (ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)==PackageManager.PERMISSION_GRANTED);
+    }
+
+    private void requestPermission(){
+        ArrayList<String> list = new ArrayList<>();
+        if(!readPermitted());
+        list.add(Manifest.permission.READ_EXTERNAL_STORAGE);
+        if(!writePermitted());
+        list.add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+
+        if(list.size()>0) {
+            String[] arr = new String[2];
+            arr = list.toArray(arr);
+            ActivityCompat.requestPermissions(this, arr, 0);
         }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        // Permission when you open the app
+        if(requestCode==0 && grantResults.length>0){
+            for(int i: grantResults){
+                if(i == PackageManager.PERMISSION_GRANTED){
+                    Log.d("OpenRequest", "granted");
+                }
+            }
+        }
+        // Permission at runtime for writeExternalStorage when creating Playlist
+        if(requestCode==1 && grantResults.length>0){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d("RuntimePermission", "writeGranted");
+            }
+        }
+
+    }
 
 }
 

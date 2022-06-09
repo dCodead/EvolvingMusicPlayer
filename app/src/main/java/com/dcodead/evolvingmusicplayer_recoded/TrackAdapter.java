@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.media.Image;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ class TrackAdapter extends ArrayAdapter<Object> {
     private int mainTextResourceId;
     private int descriptionTextResourceId;
     private int imageViewResourceId;
+    private ImageView moreOptions;
     public TrackAdapter(@NonNull Context context, int resource, int imageViewResourceId, int mainTextViewResourceId,
                         @NonNull Track[] tracks) {
         super(context, resource, tracks);
@@ -35,7 +37,6 @@ class TrackAdapter extends ArrayAdapter<Object> {
         mainTextResourceId = mainTextViewResourceId;
 //        descriptionTextResourceId = descriptionTextViewResourceId;
         this.imageViewResourceId = imageViewResourceId;
-
     }
 
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -73,6 +74,10 @@ class TrackAdapter extends ArrayAdapter<Object> {
             itemName.setTextColor(Color.GRAY);
         }
 
+
+        //Needs work here for more options button
+        moreOptions = listItem.findViewById(R.id.more_options);
+        moreOptions.setClickable(true);
         // Description TextView
 //        if(descriptionTextResourceId!=0) {
 //            TextView itemDescription = (TextView) listItem.findViewById(descriptionTextResourceId);
